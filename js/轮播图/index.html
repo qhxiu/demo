@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+    @font-face {
+      font-family: 'icomoon';
+      src: url('./fonts/icomoon.eot?mgp12o');
+      src: url('./fonts/icomoon.eot?mgp12o#iefix') format('embedded-opentype'),
+      url('./fonts/icomoon.ttf?mgp12o') format('truetype'),
+      url('./fonts/icomoon.woff?mgp12o') format('woff'),
+      url('./fonts/icomoon.svg?mgp12o#icomoon') format('svg');
+      font-weight: normal;
+      font-style: normal;
+    }
+
+    i {
+      font-family: 'icomoon';
+      font-style: normal;
+      font-weight: normal;
+    }
+
+    li {
+      list-style: none;
+    }
+
+    .slider {
+      width: 590px;
+      height: 470px;
+      margin: 50px auto;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .slider .slider-wrapper {
+      width: 5500px;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    .slider .slider-wrapper li {
+      float: left;
+    }
+
+    .slider .slider-wrapper li a {
+      display: block;
+    }
+
+    .arrow a {
+      width: 19px;
+      height: 40px;
+      position: absolute;
+      top: 50%;
+      margin-top: -20px;
+      background-color: rgba(0, 0, 0, .2);
+      color: rgba(255, 255, 255, .4);
+      text-align: center;
+      line-height: 40px;
+      z-index: 1;
+      text-decoration: none;
+    }
+
+    .arrow a.arrow_l {
+      left: 0;
+      padding-left: 5px;
+    }
+
+    .arrow a.arrow_r {
+      right: 0;
+      padding-right: 5px;
+    }
+
+    .arrow a i {
+      font-size: 20px;
+    }
+
+    .dot {
+      position: absolute;
+      bottom: 20px;
+      left: 46px;
+      z-index: 1;
+    }
+
+    .dot li {
+      float: left;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: #fff;
+      margin: 0 3px;
+    }
+
+    .dot li.current {
+      background-color: #ff2200;
+    }
+
+  </style>
+</head>
+<body>
+<div class="slider" id="slider">
+  <div class="arrow" id="arrow">
+    <a href="#" class="arrow_l">
+      <i></i>
+    </a>
+    <a href="#" class="arrow_r">
+      <i></i>
+    </a>
+  </div>
+  <ul class="dot">
+    <li class="dot-btn current" data-index="0"></li>
+    <li class="dot-btn" data-index="1"></li>
+    <li class="dot-btn" data-index="2"></li>
+    <li class="dot-btn" data-index="3"></li>
+    <li class="dot-btn" data-index="4"></li>
+    <li class="dot-btn" data-index="5"></li>
+    <li class="dot-btn" data-index="6"></li>
+    <li class="dot-btn" data-index="7"></li>
+  </ul>
+  <ul class="slider-wrapper" id="wrapper">
+    <li><a href="#"><img src="images/1.webp" alt=""></a></li>
+    <li><a href="#"><img src="images/2.webp" alt=""></a></li>
+    <li><a href="#"><img src="images/3.webp" alt=""></a></li>
+    <li><a href="#"><img src="images/4.jpg" alt=""></a></li>
+    <li><a href="#"><img src="images/5.webp" alt=""></a></li>
+    <li><a href="#"><img src="images/6.webp" alt=""></a></li>
+    <li><a href="#"><img src="images/7.webp" alt=""></a></li>
+    <li><a href="#"><img src="images/8.webp" alt=""></a></li>
+  </ul>
+</div>
+
+<script>
+  const slider = document.getElementById('slider');
+  const wrapper = document.getElementById('wrapper');
+  const imgList = wrapper.children;
+  const imgWidth = slider.offsetWidth;
+  const arrow = document.getElementById('arrow');
+  const arrowLeft = arrow.children[0];
+  const arrowRight = arrow.children[1];
+  const dotBtn = document.getElementsByClassName('dot-btn');
+  let pic = 0;
+
+  wrapper.append(wrapper.children[0].cloneNode(true));
+  let timeId = setInterval(clickHandle, 2000);
+
+  slider.onmouseover = function () {
+    clearInterval(timeId);
+  };
+  slider.onmouseout = function () {
+    timeId = setInterval(clickHandle, 2000);
+  };
+  arrowRight.onclick = clickHandle;
+
+  function clickHandle() {
+    if (pic === imgList.length - 1) {
+      pic = 0;
+      wrapper.style.left = 0 + 'px';
+    }
+    pic++;
+    wrapper.style.left = -pic * imgWidth + 'px';
+
+    if (pic === imgList.length - 1) {
+      dotBtn[dotBtn.length - 1].classList.remove('current');
+      dotBtn[0].classList.add('current');
+    } else {
+      for (let i = 0; i < dotBtn.length; i++) {
+        dotBtn[i].classList.remove('current');
+      }
+      dotBtn[pic].classList.add('current');
+    }
+  }
+
+  arrowLeft.onclick = function () {
+    if (pic === 0) {
+      pic = imgList.length - 1;
+      wrapper.style.left = -pic * imgWidth + 'px';
+    }
+    pic--;
+    wrapper.style.left = -pic * imgWidth + 'px';
+    for (let i = 0; i < dotBtn.length; i++) {
+      dotBtn[i].classList.remove('current');
+    }
+    dotBtn[pic].classList.add('current');
+  };
+
+  for (let i = 0; i < dotBtn.length; i++) {
+    dotBtn[i].onmouseover = f1;
+  }
+
+  function f1() {
+    for (let i = 0; i < dotBtn.length; i++) {
+      dotBtn[i].classList.remove('current');
+    }
+    this.classList.add('current');
+    pic = this.getAttribute('data-index');
+    wrapper.style.left = -pic*imgWidth + 'px';
+  }
+</script>
+</body>
+</html>
